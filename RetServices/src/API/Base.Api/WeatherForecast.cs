@@ -1,5 +1,8 @@
 namespace Base.Api
 {
+    /// <summary>
+    /// added summary for weather forecast
+    /// </summary>
     public class WeatherForecast
     {
         public DateOnly Date { get; set; }
