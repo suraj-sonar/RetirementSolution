@@ -6,6 +6,7 @@ using Serilog;
 using Base.Persistence;
 using Base.Application;
 using Microsoft.Extensions.DependencyInjection;
+using Base.Application.Logging;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAppLogging(builder.Configuration);
@@ -25,7 +26,23 @@ try
 
     var app = builder.Build();
 
-    
+    #region loging
+    app.Use(async (context, next) =>
+    {
+        var logger = context.RequestServices.GetRequiredService<ILoggerFactory>()
+                                            .CreateLogger("RequestLogger");
+        
+
+        logger.LogInformation("Handling request: {Method} {Path}",
+                              context.Request.Method, context.Request.Path);
+
+        await next();
+
+        logger.LogInformation("Finished handling request.");
+    });
+
+    #endregion
+
     if (app.Environment.IsDevelopment())
     {
         app.UseSwagger();
