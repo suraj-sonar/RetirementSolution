@@ -27,7 +27,7 @@ jobs:
 
     # 4. Build solution
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build ./RetServices/RetServices.sln --no-restore --configuration Release
 
     # 5. Run unit tests
     - name: Test
