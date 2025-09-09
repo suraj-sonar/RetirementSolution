@@ -1,0 +1,38 @@
+name: Test CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Checkout source code
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Setup .NET
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.0'   # match your project version
+
+    # 3. Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
+
+    # 4. Build solution
+    - name: Build
+      run: dotnet build --no-restore --configuration Release
+
+    # 5. Run unit tests
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+
+    # 6. (Optional) Build Docker image after tests pass
+    - name: Build Docker image
+      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
