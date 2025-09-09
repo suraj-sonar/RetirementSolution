@@ -134,4 +134,20 @@ public class PersonControllerTests
         Result.Value.Should().BeEquivalentTo(personMock);
 
     }
+
+    [Fact]
+    public async Task GetByID_ShouldLogInformation_WhenCalled()
+    {
+        // Arrange
+        var person = new Person();
+        _personServiceMock.Setup(s => s.GetPersonByIdAsync(It.IsAny<int>())).ReturnsAsync(person);
+        int testId = 1;
+        // Act
+        await _controller.Get(testId);
+
+        // Assert
+        _logger.Verify(
+                       x => x.LogInformation($"Getting person with ID: {testId}"),
+                                  Times.Once);
+    }
 }
