@@ -134,6 +134,7 @@ public class PersonControllerTests
         Result.Value.Should().BeEquivalentTo(personMock);
 
     }
+
     [Fact]
     public async Task GetByID_ShouldLogInformation_WhenCalled()
     {
