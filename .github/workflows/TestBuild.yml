@@ -23,7 +23,7 @@ jobs:
 
     # 3. Restore dependencies
     - name: Restore dependencies
-      run: dotnet restore RetServices.sln
+      run: dotnet restore ./RetServices/RetServices.sln
 
     # 4. Build solution
     - name: Build
