@@ -23,10 +23,27 @@ public class PersonService : IPersonService
         return _personRepository.DeletePersonAsync(id);
     }
 
-    public Task<List<Person>> GetAllPersonsAsync()
+    public async Task<List<Person>> GetAllPersonsAsync()
     {
         _logger.LogInformation("Fetching all persons from the repository.");
-        return _personRepository.GetAllPersonsAsync();
+        try
+        {
+            var persons = await _personRepository.GetAllPersonsAsync();
+            if (persons == null || persons.Count == 0)
+            {
+                _logger.LogWarning("No persons found in the repository.");
+            }
+            else
+            {
+                _logger.LogInformation($"{persons.Count} persons fetched from the repository.");
+            }
+            return persons;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while fetching all persons.");
+            throw;
+        }
     }
 
     public Task<Person?> GetPersonByIdAsync(int id)
