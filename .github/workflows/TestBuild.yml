@@ -31,7 +31,7 @@ jobs:
 
     # 5. Run unit tests
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./RetServices/RetServices.sln --no-build --verbosity normal
 
     # 6. (Optional) Build Docker image after tests pass
     - name: Build Docker image
