@@ -22,7 +22,6 @@ public class PersonService : IPersonService
     {
         return _personRepository.DeletePersonAsync(id);
     }
-
     public async Task<List<Person>> GetAllPersonsAsync()
     {
         _logger.LogInformation("Fetching all persons from the repository.");
@@ -44,6 +43,7 @@ public class PersonService : IPersonService
             _logger.LogError(ex, "An error occurred while fetching all persons.");
             throw;
         }
+
     }
 
     public Task<Person?> GetPersonByIdAsync(int id)
