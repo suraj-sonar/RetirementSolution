@@ -38,6 +38,4 @@ jobs:
       run: dotnet test ./RetServices/test/Core/Base.Application.test/Base.Application.test.csproj --configuration Release --verbosity normal
 
 
-    # 6. (Optional) Build Docker image after tests pass
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+   
