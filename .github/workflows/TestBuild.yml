@@ -31,8 +31,12 @@ jobs:
       run: dotnet build ./RetServices/RetServices.sln --no-restore --configuration Release
 
     # 5. Run unit tests
-    - name: Test
-      run: dotnet test ./RetServices/RetServices.sln --no-build --verbosity normal
+    - name: Run API Tests
+      run: dotnet test ./RetServices/test/API/API.Test/Base.API.Tests.csproj --configuration Release --verbosity normal
+
+    - name: Run Application Tests
+      run: dotnet test ./RetServices/test/Core/Base.Application.test/Base.Application.test.csproj --configuration Release --verbosity normal
+
 
     # 6. (Optional) Build Docker image after tests pass
     - name: Build Docker image
