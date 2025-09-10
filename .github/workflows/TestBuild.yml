@@ -32,10 +32,27 @@ jobs:
 
     # 5. Run unit tests
     - name: Run API Tests
-      run: dotnet test ./RetServices/test/API/API.Test/Base.API.Tests.csproj --configuration Release --verbosity normal
+      run: dotnet test ./RetServices/test/API/API.Test/Base.API.Tests.csproj --configuration Release --logger "trx;LogFileName=api_test_results.trx" --verbosity normal
 
     - name: Run Application Tests
-      run: dotnet test ./RetServices/test/Core/Base.Application.test/Base.Application.test.csproj --configuration Release --verbosity normal
+      run: dotnet test ./RetServices/test/Core/Base.Application.test/Base.Application.test.csproj --configuration Release --logger "trx;LogFileName=app_test_results.trx" --verbosity normal
+
+    #6.Uplodaing the report
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '**/TestResults/*.trx'
+
+    #7
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: xUnit Tests
+        path: '**/TestResults/*.trx'
+        reporter: dotnet-trx
+
 
 
    
