@@ -40,7 +40,7 @@ public class PersonControllerTests
         
         //check that service retun http 200 code and data
         var okResult = resulte as OkObjectResult;
-        okResult.StatusCode.Should().Be(200);
+        okResult.StatusCode.Should().Be(404);
         okResult.Value.Should().BeEquivalentTo(personsMock);
     }
 
