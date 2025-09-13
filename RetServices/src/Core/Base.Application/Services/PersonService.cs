@@ -15,7 +15,9 @@ public class PersonService : IPersonService
     }
     public Task<int> AddPersonAsync(Person person)
     {
-      return _personRepository.AddPersonAsync(person);
+        //refactor this method to include logging        
+        _logger.LogInformation("Adding a new person to the repository.");
+        return _personRepository.AddPersonAsync(person);
     }
 
     public Task DeletePersonAsync(int id)
@@ -25,25 +27,16 @@ public class PersonService : IPersonService
     public async Task<List<Person>> GetAllPersonsAsync()
     {
         _logger.LogInformation("Fetching all persons from the repository.");
-        try
+        var persons = await _personRepository.GetAllPersonsAsync();
+        if (persons == null || persons.Count == 0)
         {
-            var persons = await _personRepository.GetAllPersonsAsync();
-            if (persons == null || persons.Count == 0)
-            {
-                _logger.LogWarning("No persons found in the repository.");
-            }
-            else
-            {
-                _logger.LogInformation($"{persons.Count} persons fetched from the repository.");
-            }
-            return persons;
+            _logger.LogWarning("No persons found in the repository.");
         }
-        catch (Exception ex)
+        else
         {
-            _logger.LogError(ex, "An error occurred while fetching all persons.");
-            throw;
+            _logger.LogInformation($"{persons.Count} persons fetched from the repository.");
         }
-
+        return persons;
     }
 
     public Task<Person?> GetPersonByIdAsync(int id)
