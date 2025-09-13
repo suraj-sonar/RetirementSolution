@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+  checks: write
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -14,6 +18,7 @@ jobs:
     # 1. Checkout source code
     - name: Checkout repository
       uses: actions/checkout@v4
+
 
     # 2. Setup .NET
     - name: Setup .NET
@@ -30,9 +35,28 @@ jobs:
       run: dotnet build ./RetServices/RetServices.sln --no-restore --configuration Release
 
     # 5. Run unit tests
-    - name: Test
-      run: dotnet test ./RetServices/RetServices.sln --no-build --verbosity normal
+    - name: Run API Tests
+      run: dotnet test ./RetServices/test/API/API.Test/Base.API.Tests.csproj --configuration Release --logger "trx;LogFileName=api_test_results.trx" --verbosity normal
 
-    # 6. (Optional) Build Docker image after tests pass
-    - name: Build Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Run Application Tests
+      run: dotnet test ./RetServices/test/Core/Base.Application.test/Base.Application.test.csproj --configuration Release --logger "trx;LogFileName=app_test_results.trx" --verbosity normal
+
+    #6.Uplodaing the report
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '**/TestResults/*.trx'
+
+    #7
+    - name: Publish Test Results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: xUnit Tests
+        path: '**/TestResults/*.trx'
+        reporter: dotnet-trx
+
+
+
+   
