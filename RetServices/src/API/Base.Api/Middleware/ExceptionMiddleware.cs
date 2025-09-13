@@ -1,4 +1,8 @@
-﻿namespace Base.Api.Middleware
+﻿using Base.Application.Exceptions;
+using Microsoft.AspNetCore.Http;
+using System.Net;
+
+namespace Base.Api.Middleware
 {
     public class ExceptionMiddleware
     {
@@ -25,13 +29,24 @@
         {
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-            return context.Response.WriteAsync(new ErrorDetails()
+            switch (exception)
             {
-                StatusCode = context.Response.StatusCode,
-                Message = exception.Message,
-                InnerException = exception.InnerException!=null? exception.InnerException.Message : string.Empty
-            }.ToString());
+                case Application.Exceptions.BadRequestException badRequestException:
+                    return context.Response.WriteAsync(new ErrorDetails()
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = exception.Message,
+                        InnerException = exception.InnerException != null ? exception.InnerException.Message : string.Empty,
+                        Errors = badRequestException.ValidationErrors
+                    }.ToString());
+                default:
+                    return context.Response.WriteAsync(new ErrorDetails()
+                    {
+                        StatusCode = context.Response.StatusCode,
+                        Message = exception.Message,
+                        InnerException = exception.InnerException != null ? exception.InnerException.Message : string.Empty,
+                    }.ToString());
+            }
         }
     }
 }
