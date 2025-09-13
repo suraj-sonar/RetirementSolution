@@ -17,7 +17,7 @@ namespace Base.Persistence.DBContext
 
             if (string.IsNullOrEmpty(ConnectionString))
             {
-                throw new ArgumentException("Connection string 'RSConnectionString' is not configured.");
+                throw new Exception("Connection string 'RSConnectionString' is not configured.");
             }
             //Create a new  with the retrived connection string
             _connection = new SqlConnection(ConnectionString);
