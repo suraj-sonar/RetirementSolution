@@ -1,12 +1,8 @@
 using Base.logging;
-using Base.Application.ServiceContracts;
-using Base.Application.Services;
-using Base.Application.RepositoryContracts;
 using Serilog;
 using Base.Persistence;
 using Base.Application;
-using Microsoft.Extensions.DependencyInjection;
-using Base.Application.Logging;
+using Base.Api.Middleware;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAppLogging(builder.Configuration);
@@ -26,6 +22,7 @@ try
 
     var app = builder.Build();
 
+    app.UseMiddleware<ExceptionMiddleware>();
     #region loging
     app.Use(async (context, next) =>
     {
