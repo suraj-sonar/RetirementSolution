@@ -3,8 +3,7 @@ using Base.Application.ServiceContracts;
 using Base.Application.Validation;
 using Base.Domain;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Base.Application.Exceptions;
 
 namespace Base.Api.Controllers
 {
@@ -68,11 +67,12 @@ namespace Base.Api.Controllers
             var result = validator.Validate(person);
             if (!result.IsValid)
             {
-                return BadRequest(result.Errors.Select(e => new
-                {
-                    Field = e.PropertyName,
-                    Error = e.ErrorMessage
-                }));
+                //return BadRequest(result.Errors.Select(e => new
+                //{
+                //    Field = e.PropertyName,
+                //    Error = e.ErrorMessage
+                //}));
+                throw new BadRequestException("Validation failed for the person object.", result);
 
             }
             person.id = await _personService.AddPersonAsync(person);

@@ -14,7 +14,8 @@ public static class DependencyInjection
         services.AddTransient<IPersonService, PersonService>();
        
         services.AddValidatorsFromAssemblyContaining<PersonValidator>();
-        services.AddFluentValidationAutoValidation();
+        //services.AddFluentValidationAutoValidation();
+        
         
         return services;
     }
