@@ -16,6 +16,7 @@ namespace Base.Application.Validation
             RuleFor(p => p.EmailID).NotEmpty().WithMessage("Email ID is required.")
                 .EmailAddress().WithMessage("A valid email is required.");
             RuleFor(p => p.Birthdate).LessThan(DateTime.Now).WithMessage("Birthdate must be in the past.");
+            RuleFor(p=>p.Birthdate).NotEmpty().WithMessage("Birthdate is required.");
 
         }
     }
